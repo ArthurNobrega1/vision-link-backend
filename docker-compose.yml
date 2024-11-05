@@ -1,0 +1,33 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    env_file:
+      - ".env"
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo-network
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_configdb_data:/data/configdb
+    restart: always
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    env_file:
+      - ".env"
+    ports:
+      - "5051:8081"
+    networks:
+      - mongo-network
+    restart: always
+
+networks:
+  mongo-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mongodb_configdb_data:

@@ -1,0 +1,40 @@
+# Environment variables
+.env
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+out/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# MacOS files
+.DS_Store
+
+# Coverage directory (if using any coverage tool like Jest)
+coverage/
+
+# Temporary files
+tmp/*
+temp/*
+!tmp/.gitkeep
