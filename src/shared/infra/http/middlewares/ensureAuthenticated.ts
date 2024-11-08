@@ -8,14 +8,14 @@ export default function ensureAuthenticated(request: Request, response: Response
     const authHeader = request.headers.authorization
 
     if (!authHeader) {
-        throw new CustomError('JWT token ausente', 401)
+        throw new CustomError('Sessão inexistente', 401)
     }
 
     const [, token] = authHeader.split(' ')
 
     const tokenSecret = process.env.TOKEN_SECRET
     if (!tokenSecret) {
-        throw new CustomError("TOKEN_SECRET não está definido", 500)
+        throw new CustomError("Sessão não definida", 500)
     }
 
     try {
@@ -28,6 +28,6 @@ export default function ensureAuthenticated(request: Request, response: Response
 
         next()
     } catch (error) {
-        throw new CustomError('JWT token inválido', 403)
+        throw new CustomError('Sessão inválida', 403)
     }
 }
