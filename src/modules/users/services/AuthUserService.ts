@@ -39,17 +39,20 @@ export default class AuthUserService {
             throw new CustomError('Preencha todos os campos obrigatórios', 400)
         }
 
-        let user
+        let userByEmail, userByUsername
         if (this.data.email) {
             const normalizedEmail = normalizeString(this.data.email)
 
-            user = await this.usersRepository.findOne({ email: normalizedEmail })
+            userByEmail = await this.usersRepository.findOne({ email: normalizedEmail })
         }
-        else if (this.data.username) {
+
+        if (this.data.username) {
             const normalizedUsername = normalizeString(this.data.username)
 
-            user = await this.usersRepository.findOne({ username: normalizedUsername })
+            userByUsername = await this.usersRepository.findOne({ username: normalizedUsername })
         }
+
+        const user = userByEmail ? userByEmail : userByUsername
 
         if (!user) {
             throw new CustomError("Email/nome de usuário ou senha inválidos", 400)
