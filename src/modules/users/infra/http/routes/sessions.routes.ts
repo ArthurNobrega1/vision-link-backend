@@ -11,6 +11,7 @@ const userAvatarController = new UserAvatarController()
 
 const upload = multer(uploadConfig)
 
+sessionsRouter.get('/', ensureAuthenticated, sessionsController.show)
 sessionsRouter.post('/', sessionsController.create)
 sessionsRouter.patch('/avatar', ensureAuthenticated, upload.single('avatar'), userAvatarController.update)
 
