@@ -2,6 +2,7 @@ import WinstonLoggerProvider from "@shared/providers/LoggerProvider/implementati
 import { Request, Response } from "express";
 import User from "../../mongoose/entities/User";
 import CreateUserService from "@modules/users/services/CreateUserService";
+import DeleteUserService from "@modules/users/services/DeleteUserService";
 
 export default class UsersController {
     private usersRepository = User
@@ -27,5 +28,18 @@ export default class UsersController {
         WinstonLoggerProvider.info('Usuário criado')
 
         response.status(201).json(user)
+    }
+
+    public delete = async (request: Request, response: Response) => {
+        const deleteUser = new DeleteUserService({
+            usersRepository: this.usersRepository,
+            userId: request.user.id
+        })
+
+        WinstonLoggerProvider.info('Removendo usuário')
+        await deleteUser.execute()
+        WinstonLoggerProvider.info('Usuário removido')
+
+        response.status(204).send()
     }
 }
