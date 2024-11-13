@@ -1,69 +1,128 @@
-# Vision Link
+# Vision Link (Backend)
 
-## Visão Geral
+- App mobile para se comunicar com ferramenta que auxilia a locomoção de deficientes visuais
+- vamos usar as seguintes tecnologias: 
+   - Typescript
+   - Express
+   - MongoDb
+   - Mongo Express
+   - Docker
 
-- Este back-end oferece suporte ao aplicativo para deficientes visuais, proporcionando funcionalidades de autenticação, cadastro de usuário, recuperação de senha e integração com MongoDB. O projeto é construído com TypeScript e Node.js e utiliza o Firebase e MongoDB para armazenar dados.
+## Instalação
+Para rodar o projeto, siga os seguintes passos:
 
-## Estrutura do Projeto
-- Docker Compose: Configuração para levantar serviços com MongoDB e Mongo Express.
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/ArthurNobrega1/vision-link-backend.git
+   ```
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+3. Crie um arquivo .env baseado no .env.example que existe no repositório
+4. Configuração do Backend:
+   Para gerar tokens de sessão no backend, é necessário configurar a variável `TOKEN_SECRET` no arquivo `.env`:
+   ```env
+   TOKEN_SECRET=<seu-token-secreto>
+   ```
+5. Caso queira usar **MongoDB sem Docker**, basta preencher as variáveis `MONGO_HOST`, `MONGO_PORT`, `MONGO_DB`, `MONGO_USER`, e `MONGO_PASS` com os dados do seu banco (exemplo de configuração para localhost) (pode pular para a instução 11):
+   ```env
+   # Connection Backend OneCompiler
+   MONGO_HOST=<host>
+   MONGO_PORT=<porta>
+   MONGO_DB=<banco>
+   MONGO_USER=<usuário>
+   MONGO_PASS=<senha>
+   ```
+6. Configuração do Banco de Dados (MongoDB):
+   Caso esteja utilizando **Docker** para o backend e banco de dados, você pode deixar as variáveis como estão no exemplo abaixo:
+   ```env
+   # Connection Backend Docker
+   MONGO_HOST=localhost
+   MONGO_PORT=27017
+   MONGO_DB=vision-link
+   MONGO_USER=admin
+   MONGO_PASS=password
 
-- Serviços Principais:
-    - `CreateUserService`: Lida com a criação de usuários e validações (nome, email, senha).
+   # Credentials Database
+   MONGO_INITDB_ROOT_USERNAME=admin
+   MONGO_INITDB_ROOT_PASSWORD=password
 
-    - `ForgotPasswordController`: Envia email para redefinição de senha, usando o provedor de email EtherealMailProvider.
+   # Connection Mongo Express
+   ME_CONFIG_MONGODB_URL='mongodb://admin:password@mongodb:27017'
 
-- Middleware de Autenticação: `ensureAuthenticated` valida o token JWT para proteger rotas autenticadas.
+   # Credentials Mongo Express
+   ME_CONFIG_BASICAUTH_USERNAME=admin
+   ME_CONFIG_BASICAUTH_PASSWORD=pass
+   ```
+7. Para rodar o banco e o Mongo Express no **Docker**, use o comando:
+   ```bash
+   docker-compose up
+   ```
+   Esse comando vai levantar o **MongoDB** e o **Mongo Express**, onde você pode acessar a interface do MongoDB através de [http://localhost:5051](http://localhost:5051).
+8. Criar o banco de dados (se estiver usando Docker):
+   Após subir os containers do Docker com o comando `docker-compose up`, é necessário criar o banco de dados dentro do MongoDB.
+   
+   Para isso, execute o comando abaixo para acessar o terminal do MongoDB:
+   ```bash
+   docker-compose exec mongodb bash
+   ```
+9. Dentro do container, abra o **mongo shell** com o comando:
+   ```bash
+   mongosh
+   ```
+10. Agora, no **mongo shell**, crie o banco de dados com o comando:
+   ```js
+   use vision-link
+   ```
+   Isso criará o banco de dados `vision-link` que será utilizado pela aplicação.
+11. Inicie o projeto:
+   ```bash
+   npm run dev
+   ```
 
-## Tecnologias e Dependências
-- Node.js e TypeScript
-
-- MongoDB como banco de dados
-
-- JWT para autenticação e segurança
-
-- Docker e Docker Compose
-
-- Firebase (configuração específica não detalhada no conteúdo analisado)
-
-- Configuração do Ambiente
-
-Instale as dependências:
+## Padrão de commits
+Utilizaremos como padrão de commits o conventional commits, são basicamente uma formalização das mensagens de commits. Isso vai facilitar o acompanhamento de mudanças.
 
 ````sh
-npm install
+<tipo>(<escopo>): <descrição>
 ````
 
-Configure o arquivo .env com as variáveis necessárias, incluindo:
+`<tipo>`: Descreve o propósito do commit(obrigatório)
 
-````sh
-TOKEN_SECRET=seu_token_secreto
-MONGO_URI=sua_uri_mongodb
-````
+`<escopo>`: Mostra a área que o commit afeta.
 
-Para levantar o MongoDB e Mongo Express via Docker:
+`<descrição>`: Descreve o que o commit realiza(obrigatório)
+    
 
-````sh
-docker-compose up -d
-````
+## Tipos comuns de commit 
 
-## Executando o Back-End
+- `feat` : Para novas funcionalidades.
 
-Para iniciar o servidor localmente:
+- `fix` : Para correção de bugs.
 
-````sh
-npm run dev
-````
-### Rotas Principais
+- `docs` : Para alterações na documentação.
 
-- Cadastro de Usuário: Rota que permite criar um novo usuário com validação completa dos dados.
+- `style` : Para formatação, estilo de código, sem mudanças no código de produção.
 
-- Autenticação: Middleware ensureAuthenticated que protege rotas utilizando JWT.
+- `refactor` : Para refatorações de código.
 
-- Esqueci minha senha: Envia um email para o usuário redefinir sua senha, usando EtherealMailProvider.
+- `test` : Para adição ou modificação de testes.
 
+- `chore` : Para tarefas de manutenção, como atualização de dependências.
+
+## Exemplos de Mensagens de Commit
+Aqui estão alguns exemplos de conventional commits
+
+```sh
+feat(login): adicionar funcionalidade de login 
+```
+```sh
+fix(api): corrigir erro de rota 
+```
 ## Equipe:
 
 - Arthur Nóbrega Leite
 - Augusto Souza Freitas Teixeira
 - Guilherme de Medeiros Moura
-- Victor de Souza Xavier Fernandes
+- Victor de Souza Xavier Fernandes 
