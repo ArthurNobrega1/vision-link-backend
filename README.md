@@ -71,11 +71,10 @@ Para rodar o projeto, siga os seguintes passos:
    ```bash
    mongosh
    ```
-10. Agora, no **mongo shell**, crie o banco de dados com o comando:
+10. Agora, no **mongo shell**, crie o banco de dados com o comando (Isso criará o banco de dados `vision-link` que será utilizado pela aplicação):
    ```js
    use vision-link
    ```
-   Isso criará o banco de dados `vision-link` que será utilizado pela aplicação.
 11. Inicie o projeto:
    ```bash
    npm run dev
