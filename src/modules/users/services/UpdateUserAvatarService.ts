@@ -3,6 +3,7 @@ import IUsersRepository from "../repositories/IUsersRepository";
 import uploadConfig from "config/upload";
 import path from "path";
 import fs from 'fs'
+import cloudinary from "config/cloudinary";
 
 interface IUpdateUserAvatarService {
     usersRepository: IUsersRepository
@@ -32,18 +33,32 @@ export default class UpdateUserAvatarService {
             throw new CustomError('Avatar é obrigatório', 400)
         }
 
-        if (user.avatar) {
-            const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar.toString())
-            const userAvatarFileExist = await fs.promises.stat(userAvatarFilePath)
+        const filePath = path.resolve(uploadConfig.directory, this.avatarFilename);
+        if (!fs.existsSync(filePath)) {
+            throw new CustomError('Arquivo não encontrado no servidor local', 400);
+        }
 
-            if (userAvatarFileExist) {
-                await fs.promises.unlink(userAvatarFilePath)
+        const uploadResponse = await cloudinary.uploader.upload(filePath, {
+            folder: process.env.CLOUDINARY_FOLDER || 'default'
+        })
+
+        if (user.avatar) {
+            const publicId = user.avatar.split('/').pop()?.split('.')[0]
+            if (publicId) {
+                await cloudinary.uploader.destroy(publicId)
             }
         }
 
-        user.avatar = this.avatarFilename
+        user.avatar = uploadResponse.secure_url
 
         const userNewAvatar = await this.usersRepository.findByIdAndUpdate(this.userId, user, { new: true })
+
+        // Remove tmp avatar file
+        try {
+            fs.unlinkSync(filePath)
+        } catch (err) {
+            console.error('Erro ao tentar remover o arquivo local:', err)
+        }
 
         return userNewAvatar
     }
