@@ -80,7 +80,9 @@ Para rodar o projeto, siga os seguintes passos:
 ```js
 db.createUser({ user: "admin", pwd: "password", roles: [{ role: "root", db: "admin" }] })
    ```
-12. Inicie o projeto:
+
+12. Escreva exit 2x ou crie outro terminal
+13. Inicie o projeto:
    ```bash
    npm run dev
    ```
