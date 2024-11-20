@@ -4,6 +4,7 @@ import uploadConfig from "config/upload";
 import path from "path";
 import fs from 'fs'
 import cloudinary from "config/cloudinary";
+import WinstonLoggerProvider from "@shared/providers/LoggerProvider/implementations/WinstonLoggerProvider";
 
 interface IUpdateUserAvatarService {
     usersRepository: IUsersRepository
@@ -33,9 +34,9 @@ export default class UpdateUserAvatarService {
             throw new CustomError('Avatar é obrigatório', 400)
         }
 
-        const filePath = path.resolve(uploadConfig.directory, this.avatarFilename);
+        const filePath = path.resolve(uploadConfig.directory, this.avatarFilename)
         if (!fs.existsSync(filePath)) {
-            throw new CustomError('Arquivo não encontrado no servidor local', 400);
+            throw new CustomError('Arquivo não encontrado no servidor local', 400)
         }
 
         const uploadResponse = await cloudinary.uploader.upload(filePath, {
@@ -43,9 +44,13 @@ export default class UpdateUserAvatarService {
         })
 
         if (user.avatar) {
-            const publicId = user.avatar.split('/').pop()?.split('.')[0]
+            const publicId = user.avatar.split('/').slice(-2).join('/').replace(/\.(jpg|jpeg|png|gif|bmp|webp)$/i, '')
             if (publicId) {
-                await cloudinary.uploader.destroy(publicId)
+                const destroyResponse = await cloudinary.uploader.destroy(publicId)
+                WinstonLoggerProvider.info('Removendo foto do banco')
+                if (destroyResponse.result !== 'ok') {
+                    throw new CustomError('Erro ao excluir a imagem anterior do Cloudinary', 500)
+                }
             }
         }
 
