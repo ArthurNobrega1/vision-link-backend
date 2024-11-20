@@ -35,7 +35,7 @@ Para rodar o projeto, siga os seguintes passos:
    MONGO_PASS=<senha>
    ```
 6. Configuração do Banco de Dados (MongoDB):
-   Caso esteja utilizando **Docker** para o backend e banco de dados, você pode deixar as variáveis como estão no exemplo abaixo:
+   Caso esteja utilizando **Docker** para o backend e banco de dados, você pode deixar as variáveis como estão no exemplo abaixo e outras configurações do .env:
    ```env
    # Connection Backend Docker
    MONGO_HOST=localhost
@@ -57,7 +57,7 @@ Para rodar o projeto, siga os seguintes passos:
    ```
 7. Para rodar o banco e o Mongo Express no **Docker**, use o comando:
    ```bash
-   docker-compose up
+   docker-compose up -d
    ```
    Esse comando vai levantar o **MongoDB** e o **Mongo Express**, onde você pode acessar a interface do MongoDB através de [http://localhost:5051](http://localhost:5051).
 8. Criar o banco de dados (se estiver usando Docker):
@@ -67,15 +67,20 @@ Para rodar o projeto, siga os seguintes passos:
    ```bash
    docker-compose exec mongodb bash
    ```
-9. Dentro do container, abra o **mongo shell** com o comando:
+9. Dentro do container, abra o **mongo shell** usando seu usuário com o comando:
    ```bash
-   mongosh
+   mongosh --host mongodb --port 27017 -u "admin" -p "password" --authenticationDatabase "admin"
    ```
 10. Agora, no **mongo shell**, crie o banco de dados com o comando (Isso criará o banco de dados `vision-link` que será utilizado pela aplicação):
    ```js
    use vision-link
    ```
-11. Inicie o projeto:
+
+11. Crie um usuário padrão para acesso do banco:
+```js
+db.createUser({ user: "admin", pwd: "password", roles: [{ role: "root", db: "admin" }] })
+   ```
+12. Inicie o projeto:
    ```bash
    npm run dev
    ```
