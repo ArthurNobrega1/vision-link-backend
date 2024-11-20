@@ -3,9 +3,11 @@ import { Request, Response } from "express";
 import User from "../../mongoose/entities/User";
 import CreateUserService from "@modules/users/services/CreateUserService";
 import DeleteUserService from "@modules/users/services/DeleteUserService";
+import Route from "@modules/routes/infra/mongoose/entities/Route";
 
 export default class UsersController {
     private usersRepository = User
+    private routesRepository = Route
 
     public index = async (request: Request, response: Response) => {
         WinstonLoggerProvider.info('Buscando usuários')
@@ -33,6 +35,7 @@ export default class UsersController {
     public delete = async (request: Request, response: Response) => {
         const deleteUser = new DeleteUserService({
             usersRepository: this.usersRepository,
+            routesRepository: this.routesRepository,
             userId: request.user.id
         })
 
